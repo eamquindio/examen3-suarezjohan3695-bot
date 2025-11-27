@@ -1,6 +1,7 @@
 package edu.eam.ingesoft.fundamentos.parqueadero.logica;
 
 import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Clase principal que gestiona todas las operaciones del parqueadero.
@@ -35,6 +36,11 @@ public class Parqueadero {
      */
     public Propietario buscarPropietario(String cedula) {
         // TODO: Implementar método usando foreach
+        for(Propietario propietario:propietarios){
+            if(propietario.getCedula().equals(cedula)){
+                return propietario;
+            }
+        }
         return null;
     }
 
@@ -45,7 +51,12 @@ public class Parqueadero {
      * @return El vehículo encontrado, o null si no existe
      */
     public Vehiculo buscarVehiculo(String placa) {
-        // TODO: Implementar método usando foreach
+        for(Vehiculo carro:vehiculos){
+            if(carro.getPlaca().equals(placa)){
+                return carro;
+            }
+        }
+        
         return null;
     }
 
@@ -60,7 +71,17 @@ public class Parqueadero {
      */
     public boolean registrarPropietario(String cedula, String nombre) {
         // TODO: Implementar método con validación usando if
-        return false;
+
+        for(Propietario prop:propietarios){
+            if(prop.getCedula().equals(cedula)){
+                return false;
+
+            }
+        }
+        Propietario propietario = new Propietario(cedula, nombre);
+        propietarios.add(propietario);
+
+        return true;
     }
 
     /**
@@ -77,7 +98,27 @@ public class Parqueadero {
      */
     public boolean registrarVehiculo(String placa, int modelo, String color, String cedula, String tipo) {
         // TODO: Implementar método con validaciones usando if
-        return false;
+
+            for(Vehiculo carro: vehiculos){
+                if(carro.getPlaca().equals(placa)){
+                    return false;
+                }
+            }
+             if(buscarPropietario(cedula)==null){
+                return false;
+         }
+            for(Propietario prop:propietarios){
+        
+        Vehiculo carro = new Vehiculo (placa, modelo, color, cedula, tipo);
+
+        cedula=prop.getCedula();
+        
+        vehiculos.add(carro);
+            }
+
+
+
+        return true;
     }
 
     // ==================== MÉTODO PARA ACUMULAR HORAS ====================
@@ -91,7 +132,19 @@ public class Parqueadero {
      */
     public boolean acumularHorasCliente(String cedula, int horas) {
         // TODO: Implementar método con delegación
-        return false;
+
+        for(Propietario dueno: propietarios){
+            if(dueno==null){
+                return false;
+
+            }
+    
+        
+            dueno.acumularHoras(horas);
+        }
+
+
+        return true;
     }
 
     // ==================== MÉTODO DE REGISTRO DE SERVICIO ====================
@@ -116,6 +169,24 @@ public class Parqueadero {
      */
     public double registrarServicio(String placa, int horaIngreso, int horaSalida) {
         // TODO: Implementar método con múltiples validaciones usando if
+
+        if(horaIngreso>=1||horaIngreso<=22){
+            if(horaSalida>=2||horaSalida<=23){
+                if(horaSalida>horaIngreso){
+                    if(buscarVehiculo(placa) != null) {
+                        Servicio serv= new Servicio (horaIngreso, horaSalida, vehiculo);
+                        vehiculo=Vehiculo;
+                        servicios.add(serv);
+
+                        return Servicio.calcularCosto();
+
+                        
+                    }
+                }
+            }
+    
+            
+        }
         return -1;
     }
 
@@ -127,8 +198,13 @@ public class Parqueadero {
      * @return La suma total de todos los costos de servicios
      */
     public double calcularTotalRecaudado() {
-        // TODO: Implementar método usando foreach con acumulador
-        return 0;
+        double costoTotal=0;
+        for(Servicio serv:servicios){
+
+            double costoServicio=serv.getCosto();
+            costoTotal+=costoServicio;
+        }
+        return costoTotal;
     }
 
     /**
@@ -138,7 +214,15 @@ public class Parqueadero {
      */
     public int contarClientesVIP() {
         // TODO: Implementar método usando foreach con contador y if
-        return 0;
+
+        int contador=0;
+        for(Propietario dueno: propietarios){
+            if(dueno.esVIP()){
+                contador++;
+            }
+        }
+
+        return contador;
     }
 
     /**
@@ -148,7 +232,18 @@ public class Parqueadero {
      */
     public Propietario obtenerClienteMasHoras() {
         // TODO: Implementar método usando foreach para buscar máximo
-        return null;
+        double MAXhoras=-1;
+        Propietario ClienteMAX=null;
+
+        for(Propietario prop: propietarios){
+            double horasAcumuladas= prop.getHorasAcumuladas();
+            if(horasAcumuladas>MAXhoras){
+                MAXhoras=horasAcumuladas;
+                ClienteMAX=prop;
+            }
+        }
+
+        return ClienteMAX;
     }
 
     // ==================== GETTERS PARA LAS LISTAS ====================

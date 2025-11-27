@@ -22,7 +22,11 @@ public class Propietario {
      * @param nombre Nombre completo del propietario
      */
     public Propietario(String cedula, String nombre) {
-        // TODO: Implementar constructor
+        
+        Propietario propietario = new Propietario (cedula,nombre);
+        this.cedula=cedula;
+        this.nombre=nombre;
+        horasAcumuladas=0;
     }
 
     // ==================== GETTERS ====================
@@ -55,7 +59,9 @@ public class Propietario {
      * @param horas Cantidad de horas a sumar
      */
     public void acumularHoras(int horas) {
-        // TODO: Implementar método
+        horasAcumuladas= horasAcumuladas + horas;
+        return;
+        
     }
 
     /**
@@ -66,8 +72,24 @@ public class Propietario {
      * @return La categoría del cliente ("ESTANDAR", "ESPECIAL" o "VIP")
      */
     public String obtenerCategoria() {
-        // TODO: Implementar método usando if-else múltiple
-        return null;
+        String categoria = ""   ;
+
+        if(horasAcumuladas>=0 && horasAcumuladas<=100){
+          
+           categoria = "ESTANDAR";
+        
+        } if (horasAcumuladas<=500){
+            categoria = "ESPECIAL" ;
+        
+        } else {
+            categoria = "VIP";
+        }
+       
+
+
+
+
+        return categoria;
     }
 
     /**
@@ -79,8 +101,24 @@ public class Propietario {
      * @return El porcentaje de descuento como valor decimal
      */
     public double obtenerDescuento() {
-        // TODO: Implementar método usando switch
-        return 0;
+        String categoria = obtenerCategoria();
+        double descuento = 0;
+
+        switch(categoria){
+
+            case "ESPECIAL":
+                descuento=0.1;
+                break;
+            case "VIP":
+                descuento=0.15;
+                 break;
+            default:
+                descuento=1;
+                break;
+              
+        }
+        
+        return descuento;
     }
 
     /**
@@ -88,7 +126,10 @@ public class Propietario {
      * @return true si tiene más de 500 horas acumuladas, false en caso contrario
      */
     public boolean esVIP() {
-        // TODO: Implementar método usando if simple
+       String categoria=obtenerCategoria();
+       if(categoria.equals("VIP")){
+        return true;
+       }
         return false;
     }
 }
